@@ -1,5 +1,6 @@
-from benchmark.scripts.predicate import Predicate
 from benchmark.models.treernn.domain import p2id
+from benchmark.scripts.predicate import Predicate
+
 
 class GaugeQuery:
     ''' age & location & (n1 & n2 & n3 ... & nk) & (p1 | p2 | ... pm) '''
@@ -41,15 +42,15 @@ class GaugeQuery:
         s = 0
         for k, v in vars(self).items():
             if k.endswith("predicates"):
-                s+=len(v)
+                s += len(v)
         return s
-    
+
     @staticmethod
     def from_string(string):
         q = string.split(' ')
         query = GaugeQuery()
         for term in q:
-            if term in ['(',')', '&', '|']:
+            if term in ['(', ')', '&', '|']:
                 continue
             p = Predicate.from_string(term)
             if p.col == 'age':
@@ -72,9 +73,8 @@ class GaugeQuery:
                 query.add_location_predicate(p)
             elif p.col == 'loc_type':
                 query.add_loctype_predicate(p)
-        return query        
-                
-                
+        return query
+
     def add_age_predicate(self, age_predicate):
         self.age_predicates.append(age_predicate)
 
@@ -95,6 +95,7 @@ class GaugeQuery:
 
     def add_neglanguage_predicate(self, neglanguage_predicate):
         self.neglangauge_predicates.append(neglanguage_predicate)
+
     def add_gender_predicate(self, gender_predicate):
         self.gender_predicates.append(gender_predicate)
 
@@ -105,7 +106,7 @@ class GaugeQuery:
         self.loctype_predicates.append(loctype_predicate)
 
     def fill_predicates(self, predicates, op):
-        
+
         if len(predicates) == 0:
             return
         if len(predicates) == 1:
@@ -119,9 +120,9 @@ class GaugeQuery:
             self.exp_array.append(op)
         self.exp_array.pop()
         self.exp_array.append(')')
-    
+
     def build_exp_array(self):
-        
+
         self.exp_array = []
         self.fill_predicates(self.age_predicates, '&')
         if self.gender_predicates: self.exp_array.append('&')
@@ -139,9 +140,6 @@ class GaugeQuery:
         if self.language_predicates: self.exp_array.append('&')
         self.fill_predicates(self.language_predicates, '|')
         if self.neglangauge_predicates: self.exp_array.append('&')
-        self.fill_predicates(self.neglangauge_predicates, '&')        
-        if self.location_predicates: self.exp_array.append('&')            
+        self.fill_predicates(self.neglangauge_predicates, '&')
+        if self.location_predicates: self.exp_array.append('&')
         self.fill_predicates(self.location_predicates, '|')
-
-                      
-

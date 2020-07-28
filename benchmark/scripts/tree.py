@@ -1,12 +1,13 @@
 from operator import attrgetter
 
+
 def priority(op):
     if op == '&': return 1
     if op == '|': return 0
     return -1
 
+
 def toPostfix(exp_array):
-    
     stack = []
     output = []
     for i in range(len(exp_array)):
@@ -21,65 +22,62 @@ def toPostfix(exp_array):
                 top = stack[-1]
             stack.pop()
         elif term in ['&', '|']:
-            while (len(stack)!=0):
+            while (len(stack) != 0):
                 top = stack[-1]
-                if top == '(' or priority(top)<priority(term): break
+                if top == '(' or priority(top) < priority(term): break
                 output.append(top)
                 stack.pop()
             stack.append(term)
         else:
             output.append(term)
-    while (len(stack)!=0):
+    while (len(stack) != 0):
         top = stack[-1]
         output.append(top)
         stack.pop()
-    
-    return output 
+
+    return output
+
 
 def exp2Prefix(exp):
-
     re_exp = list(reversed(exp))
     re_exp = [')' if x == '(' else '(' if x == ')' else x for x in re_exp]
     re_exp_posfix = toPostfix(re_exp)
     prefix = list(reversed(re_exp_posfix))
-    return prefix    
+    return prefix
 
 
-from operator import attrgetter
-
-class ExpTree: 
+class ExpTree:
     # Constructor to create a node 
-    def __init__(self , value): 
-        self.value = value 
+    def __init__(self, value):
+        self.value = value
         self.children = []
         self.num_children = 0
         self.parent = None
-    
+
     def set_idx(self, i):
         self.idx = i
         for child in self.children:
-            i = i+1
+            i = i + 1
             i = child.set_idx(i)
         return i
-    
+
     def traverse_by_values(self):
-       
+
         stack_values = []
         stack = [self]
-        while len(stack)>0:
+        while len(stack) > 0:
             node = stack.pop()
             stack_values.append((node.idx, node.value))
             if len(node.children):
                 stack.extend(node.children[::-1])
-        stack_values = [item[1] for item in stack_values]       
+        stack_values = [item[1] for item in stack_values]
         return stack_values
-        
-        
+
     def __repr__(self):
         return self.__str__()
 
     def add_child(self, children):
-        
+
         if isinstance(children, list):
             for ch in children:
                 ch.parent = self
@@ -88,8 +86,8 @@ class ExpTree:
         else:
             children.parent = self
             self.num_children += 1
-            self.children.append(children)    
-    
+            self.children.append(children)
+
     def size(self):
         if hasattr(self, '_size'):
             return self._size
@@ -129,28 +127,28 @@ class ExpTree:
         return tree.strip()
 
 
-
-
-def isOperator(c): 
+def isOperator(c):
     if c in ['&', '|']:
         return True
     return False
 
+
 def isOperand(c):
     return c.startswith('x')
- 
-def constructTree(pfix): 
+
+
+def constructTree(pfix):
     stack = []
-    for i in range(len(pfix)-1, -1, -1):
-        
+    for i in range(len(pfix) - 1, -1, -1):
+
         if isOperand(pfix[i]):
             stack.append(ExpTree(pfix[i]))
-        
+
         else:
-            
+
             v1 = stack.pop()
             v2 = stack.pop()
-            
+
             nn = ExpTree(pfix[i])
             if v1.value == pfix[i]:
                 nn.add_child(v1.children)
@@ -161,22 +159,23 @@ def constructTree(pfix):
                 nn.add_child(v2.children)
             else:
                 nn.add_child(v2)
-            
+
             stack.append(nn)
-    
-    return  stack[0]
+
+    return stack[0]
 
 
 END = '$'
-def serialize(root, file):
 
-    file.write(root.value+' ')
+
+def serialize(root, file):
+    file.write(root.value + ' ')
     for ch in root.children:
         serialize(ch, file)
-    file.write('%s '%END)
-    
+    file.write('%s ' % END)
+
+
 def deserialize(fp):
-    
     data = fp.read().rstrip().split(' ')
     stack = []
     for item in data:
@@ -186,7 +185,7 @@ def deserialize(fp):
         else:
             if len(stack) == 1:
                 break
-                
+
             n_ch = stack.pop()
             stack[-1].add_child(n_ch)
 
