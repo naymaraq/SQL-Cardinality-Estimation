@@ -14,4 +14,4 @@ if __name__ == "__main__":
     sc = Score('data')
     print(sc(treernn_model))
     print(sc(hist_est))
-    print(sc(ensemble))
+    #print(sc(ensemble))
