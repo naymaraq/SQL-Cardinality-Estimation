@@ -7,3 +7,10 @@ Cardinality estimation is a key component in query optimization. To choose the b
 
 
 ![Model Architecture](https://github.com/naymaraq/SQL-Cardinality-Estimation/blob/master/imgs/treernn.png)
+
+## To train a model run following
+`python3 -m benchmark.models.treernn.train`
+
+## To reproduce paper results look at this
+`python3 -m benchmark.evaluation.eval`
+
