@@ -1,0 +1,12 @@
+touristic_service
+bar_equipment
+online_super_market
+game
+betting_game
+trip_service
+online_taxi
+gastro_service
+wedding_srevice
+freelancer
+alcohol_beverage
+food_delivery_service
