@@ -122,6 +122,7 @@ class GaugeQuery:
     
     def build_exp_array(self):
         
+        self.exp_array = []
         self.fill_predicates(self.age_predicates, '&')
         if self.gender_predicates: self.exp_array.append('&')
         self.fill_predicates(self.gender_predicates, '|')
