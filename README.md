@@ -19,5 +19,5 @@ Cardinality estimation is a key component in query optimization. To choose the b
 
 If you found this code useful, please cite the following paper:
 
-Comming Soon
+![paper](http://mpcs.sci.am/filesimages/volumes/volume_54/04.pdf)
 
